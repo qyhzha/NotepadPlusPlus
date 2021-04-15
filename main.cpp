@@ -1,11 +1,31 @@
-#include "MainWindow.h"
 #include <QApplication>
+#include <QFileInfo>
+#include "MainWindow.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+    MainWindow *w = MainWindow::NewInstance();
+    int ret = -1;
 
-    return a.exec();
+    if (w != NULL)
+    {
+        if (argc > 1)
+        {
+            QFileInfo fi(argv[1]);
+
+            if (fi.exists())
+            {
+                w->openFile(fi.absoluteFilePath());
+            }
+        }
+
+        w->show();
+
+        ret = a.exec();
+    }
+
+    delete w;
+
+    return ret;
 }
